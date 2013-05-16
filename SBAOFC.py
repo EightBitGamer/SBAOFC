@@ -2,7 +2,7 @@ import os
 import sys
 
 print "code by Eight"
-print "SB animated object files creator v1.4"
+print "SB animated object files creator"
 
 values = ["objectName", "description", "shortDescription", "race", "dropItem", "category", "image", "imagePath", "imagePosition", "frames", "animationcycle", "spaceScan", "anchors", "size", ]
 
@@ -13,18 +13,17 @@ def fileExists(objectNameCheck):
 		if os.path.exists(dotObjectFolder):
 			print "Item already exists!"
 			newName = raw_input("Choose a different name (leave blank to overwrite)> ")
-			if raw_input("Are you sure you want to delete %s ? (Y/N)>" % objectName):
-				if newName == "":
-					files = os.listdir(dotObjectFolder)
-					for objectFile in files:
-						os.remove(dotObjectFolder + "/" + objectFile)
-					os.rmdir(dotObjectFolder)
-					dotObjitemLocation = AsItOb + "/" + objectNameCheck + ".frames"
-					objectIconPngLocation = AsItOb + "/" + objectNameCheck + "/" + objectNameCheck + "icon.png"
-					if os.path.exists(dotObjitemLocation):
-						os.remove(dotObjitemLoction)
-					if os.path.exists(objectIconPngLocation):
-						os.remove(objectDotIconPngLocation)
+			if newName == "" and raw_input("Are you sure you want to delete %s ? (Y/N)>" % objectName):
+				files = os.listdir(dotObjectFolder)
+				for objectFile in files:
+					os.remove(dotObjectFolder + "/" + objectFile)
+				os.rmdir(dotObjectFolder)
+				dotObjitemLocation = AsItOb + "/" + objectNameCheck + ".frames"
+				objectIconPngLocation = AsItOb + "/" + objectNameCheck + "/" + objectNameCheck + "icon.png"
+				if os.path.exists(dotObjitemLocation):
+					os.remove(dotObjitemLoction)
+				if os.path.exists(objectIconPngLocation):
+					os.remove(objectDotIconPngLocation)
 		else:
 			newNameValid = None
 	return objectNameCheck
@@ -104,8 +103,8 @@ else:
 	size[1] = setValue("Height", "Interger", 8)
 	names_all = setValue("Frame names", "String", "default")
 	rarity = setValue("Rarity", "String", "common")
-	imagePath = setValue("Tile sheet (WIP, leave blank)", "Image", " ")
-	imageIconPath =setValue("Inventory Icon (WIP, leave blank)", "Image", " ")
+	imagePath = setValue("Tile sheet", "Image", " ")
+	imageIconPath =setValue("Inventory Icon", "Image", " ")
 
 dimentions = [frames,1]
 itemName = objectName
@@ -192,19 +191,22 @@ saveFile = open(dotObjitemLocation, "w+")
 saveFile.write(dotObjitem)
 saveFile.close
 print "Saving Images"
-if imagePath != " ":
-	imageLocation = AsItOb + "/" + objectName + ".png"
-	originalFile = open(imagePath, "r")
-	saveFile = open(imageLocation, "w+")
-	saveFile.write(originalFile)
-	saveFile.close
+if imagePath != "":
+	with open(imagePath, "r") as oip:
+		imageData = oip.read()
+		with open(curDir + "/" + objectNamr + "/" + objectName + ".png", "w") as nip:
+			nip.write(imageData)
+			oip.close()
+			nip.close()
 
-if imageIconPath != " ":
-	originalFile = open(imageIconLPath, "r")
-	imageIconLocation = AsItOb + "/" + objectName + "icon.png"
-	saveFile = open(imageIconLocation, "w+")
-	saveFile.write(originalFile)
-	saveFile.close
+if imageIconPath != "":
+	with open(imageIconPath, "r") as oiip:
+		imageData = oiip.read()
+		with open(AsItOb + "/" + objectName + ".png", "w") as niip:
+			niip.write(imageData)
+			oiip.close()
+			niip.close()
+
 print "Complete"
 if raw_input("create Pre-made object file? (Y/N)> ") == "Y":
 	preMadeFile = objectName + "\n" + description + "\n" + shortDescription + "\n" + race + "\n" + dropItem + "\n" + category + "\n" + imagePath + "\n" + imageIconPath + "\n" + str(imagePosition[0]) + "\n" + str(imagePosition[1]) + "\n" + str(frames) + "\n" + str(animationCycle) + "\n" + str(spaceScan) + "\n" + anchors + "\n" + str(size[0]) + "\n" + str(size[1]) + "\n" + names_all + "\n" + rarity
