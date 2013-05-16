@@ -3,7 +3,7 @@ SBAOFC
 
 SB Animated object files creator
 
-SBAOFC.py is a python program written by Elliott "Eight" I. (see Lisence.md for sharing,editing permisions)
+SBAOFC.py is a python program written by "Eight" (see Lisence.md for sharing,editing permisions)
 This program (SBAOFC.py) will use user input (via a terminal window) to create the nececcery files needed by "Starbound" for the object to be added to the game ("Starbound").
 
 SB Pre-release:
