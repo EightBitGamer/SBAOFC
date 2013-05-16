@@ -1,5 +1,6 @@
-SBAOFC.py is a python program written by Elliott "Eight" I.
+SBAOFC.py is a python program written by "Eight"
 This program will use user input to create the nececcery files needed by "Starbound" for the object to be added to the game.
+
 You will still need to move the images to the right folder, I haven't finished that yet
 
 SB Pre-release:
