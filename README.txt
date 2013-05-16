@@ -1,7 +1,10 @@
-SBAOFC.py is a python program written by "Eight"
-This program will use user input to create the nececcery files needed by "Starbound" for the object to be added to the game.
+How to install:
+  -Pake sure you have python installed on your computer.
+  -Place "SBAOFC.py" in an empty folder (doesn't matter where)
 
-You will still need to move the images to the right folder, I haven't finished that yet
+To add images (WIP):
+  -when you are asked for an image, drag the image into the window, this should add the images filePath
+
 
 SB Pre-release:
 Since SB has not been released, the object's folder and "/assets/items/object" folder will be placed in the same directory(folder) that the program is in.
