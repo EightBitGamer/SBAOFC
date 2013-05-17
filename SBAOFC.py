@@ -67,19 +67,22 @@ names = []
 preMade = setValue("Drag pre-made object file here or press enter to create new> ", "Link", "none")
 if preMade != "none":
 	if "debug" == "debug":
+		debug =  os.path.isdir(preMade)
 		if not os.path.isdir(preMade):
 			print "loading file"
 			preMadeFiles = [""]
-			
-		else:
+		elif os.path.isdir(preMade):
 			print "loading files"
 			preMadeFiles = os.listdir(preMade)
 		for fileI in preMadeFiles:
-			print preMadeFiles
-			with open(preMade + "/" + fileI, "r") as pmr:
+			if fileI == "":
+				openFile = preMade
+			else:
+				openFile = preMade + "/" + fileI
+			with open(openFile, "r") as pmr:
 				loadedFile = pmr.read()	
 				loadedFiles = loadedFile.split("split", 3)
-				loadedDataFile = loadedFiles[0]
+				loadedDataFile = loadedFiles[2]
 				loadedDataFile = loadedDataFile.split("\n")
 				objectName = loadedDataFile[1]
 				objectName = fileExists(objectName)
@@ -101,7 +104,7 @@ if preMade != "none":
 				names_all = loadedDataFile[15]
 				rarity = loadedDataFile[1]
 				imageData = loadedFiles[1]
-				imageIconData = loadedFiles[2]
+				imageIconData = loadedFiles[0]
 	else:
 		print "Could not load files"
 		sys.exit()
@@ -111,20 +114,26 @@ else:
 	description = setValue("Description", "String", "")
 	shortDescription = setValue("Short Description", "String", "")
 	race = setValue("Race", "String", "Human")
+	frames = setValue("Frames", "Integer", 1)
+	size[0] = setValue("Width", "Integer", 8)
+	size[1] = setValue("Height", "Integer", 8)
 	dropItem = setValue("Drop Item", "String", objectName)
 	category = setValue("Category", "String", "decorative")
 	imagePosition[0] = setValue("X offset", "Decimal", 0)
 	imagePosition[1] = setValue("Y offset", "Decimal", 0)
-	frames = setValue("Frames", "Integer", 1)
 	animationCycle = setValue("Animation Cycle", "Decimal", 0.1)
 	spaceScan = setValue("Space Scan", "Decimal", 0.1)
 	anchors = setValue("Anchors", "String", "Background")
-	size[0] = setValue("Width", "Interger", 8)
-	size[1] = setValue("Height", "Interger", 8)
 	names_all = setValue("Frame names", "String", "default")
 	rarity = setValue("Rarity", "String", "common")
 	imagePath = setValue("Tile sheet", "Link", " ")
 	imageIconPath =setValue("Inventory Icon", "Link", " ")
+	with open(imagePath, "r") as oip:
+		imageData = oip.read()
+		oip.close()
+	with open(imageIconPath, "r") as oiip:
+		imageIconData = oiip.read()
+		oiip.close()
 
 dimentions = [frames,1]
 itemName = objectName
@@ -229,63 +238,19 @@ with open(AsItOb + "/" + objectName + ".png", "w") as niip:
 		oiip.close()
 	niip.close()
 
-print "Complete"
-preMadeBasicFolder = curDir + "/premadebasic"
-preMadeFileBasic = "v1.0\n" + objectName + "\n" + description + "\n" + shortDescription + "\n" + race + "\n" + dropItem + "\n" + category + "\n" + imagePath + "\n" + imageIconPath + "\n" + str(imagePosition[0]) + "\n" + str(imagePosition[1]) + "\n" + str(frames) + "\n" + str(animationCycle) + "\n" + str(spaceScan) + "\n" + anchors + "\n" + str(size[0]) + "\n" + str(size[1]) + "\n" + names_all + "\n" + rarity
-if not os.path.exists(preMadeBasicFolder + "/" + objectName):
-	if raw_input("create Pre-made object file? (Y/N)> ") == "Y":
-		print "Checking for Pre-made Basic folder (pre-release)"
-		if not os.path.exists(preMadeBasicFolder):
-			print "Folder not found\nCreating folder"
-			os.mkdir(preMadeBasicFolder)
-		else:
-			print "Folder found"
-		os.mkdir(preMadeBasicFolder + "/" + objectName)
-		saveFile = open(preMadeBasicFolder + "/" + objectName + "/" + objectName + ".pmb", "w")
-		saveFile.write(preMadeFileBasic)
-		saveFile.close
-		if imagePath != "pre loaded":
-			with open(imagePath, "r") as oip:
-				imageData = oip.read()
-				with open(preMadeBasicFolder + "/" + objectName + "/" + objectName + ".png", "w") as nip:
-					nip.write(imageData)
-					oip.close()
-					nip.close()
-		else:
-			with open(preMadeBasicFolder + "/" + objectName + "/" + objectName + ".png", "w") as nip:
-					nip.write(imageData)
-					nip.close()
-
-		if imageIconPath != "pre loaded":
-			with open(imageIconPath, "r") as oiip:
-				imageData = oiip.read()
-				with open(preMadeBasicFolder + "/" + objectName + "/" + objectName + "icon.png", "w") as niip:
-					niip.write(imageData)
-					oiip.close()
-					niip.close()
-		else:
-			with open(preMadeBasicFolder + "/" + objectName + "/" + objectName + "icon.png", "w") as niip:
-					niip.write(imageData)
-					niip.close()
-
 preMadeFolder = curDir + "/premade"
 if not os.path.exists(preMadeFolder + "/" + objectName + ".pmf"):
-	if raw_input("create .pof? (experimental) Y/N> ") == "Y":
+	if raw_input("Create single object file? (Y/N)> ") == "Y":
 		print "Checking for Pre-made objects folder"
 		if not os.path.exists(preMadeFolder):
 			print "Folder not found\nCreating folder"
 			os.mkdir(preMadeFolder)
 		else:
 			print "Folder found"
-		with open(imagePath, "r") as oip:
-			imageData = oip.read()
-			oip.close()
-		with open(imageIconPath, "r") as oiip:
-			imageIconData = oiip.read()
-			oiip.close()
 		preMadeFile = "v1.0\n" + objectName + "\n" + description + "\n" + shortDescription + "\n" + race + "\n" + dropItem + "\n" + category + "\n" + str(imagePosition[0]) + "\n" + str(imagePosition[1]) + "\n" + str(frames) + "\n" + str(animationCycle) + "\n" + str(spaceScan) + "\n" + anchors + "\n" + str(size[0]) + "\n" + str(size[1]) + "\n" + names_all + "\n" + rarity
-		preMadeFileData = str(preMadeFile) + "split" + str(imageData) + "split" + str(imageIconData)
+		if os.path.exists("/Users/Lachlan/Documents/repositories/SBAOFC/gearfile.gif"):
+			preMadeFileData = str(imageIconData) + "split" + str(imageData) + "split" + str(preMadeFile)
 	
-		with open(preMadeFolder + "/" + objectName + ".pmf", "w") as pmfd:
+		with open(preMadeFolder + "/" + objectName + ".png", "w") as pmfd:
 			pmfd.write(preMadeFileData)
 			pmfd.close()
