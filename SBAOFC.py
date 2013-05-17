@@ -35,20 +35,27 @@ def setValue(valueName, format, default)	:
 		value = raw_input(display)
 		if value == "" and default != "":
 			result = default
-		else:
-			try:
-				if format == "String":
-					result = value
-				if format == "Integer":
-					value = int(value)
-					result = value
-				if format == "Decimal":
-					value = float(value)
-					result = value
-				if format == "Image":
-					result = value #WIP
-			except:
-				value = None
+			return result
+		elif value == "" and default == "":
+			value = raw_input(valueName + " does not have a default > ")
+			if value == "":
+				return ""
+		try:
+			if format == "String":
+				result = value
+			if format == "Integer":
+				value = int(value)
+				result = value
+			if format == "Decimal":
+				value = float(value)
+				result = value
+			if format == "Link":
+				if value[-1] == " ":
+					value = value[:len(value) - 1]
+					
+				result = value
+		except:
+			value = None
 	return result
 
 curDir = os.getcwd()
@@ -58,31 +65,37 @@ imagePosition = [None,None]
 size = [None,None]
 names = []
 
-preMade = raw_input("Drag pre-made object file here or press enter to create new> ")
-if preMade != "":
-	try:
+preMade = setValue("Drag pre-made object file here or press enter to create new> ", "Link", "none")
+if preMade != "none":
+	if 1 + 1 == 2:
 		print "loading file"
-		loadedFile = open(preMade, "r")
-		objectName = loadedFile.readline()
+		with open(preMade, "r") as rpmf:
+			loadedFile = rpmf.read()	
+		loadedFiles = loadedFile.split("split", 3)
+		loadedDataFile = loadedFiles[0]
+		loadedDataFile = loadedDataFile.split("\n")
+		objectName = loadedDataFile[1]
 		objectName = fileExists(objectName)
-		description = loadedFile.readline()
-		shortDescription = loadedFile.readline()
-		race = loadedFile.readline()
-		dropItem = loadedFile.readline()
-		category = loadedFile.readline()
-		imagePath = loadedFile.readline()
-		imageIconPath = loadedFile.readline()
-		imagePosition[0] = loadedFile.readline()
-		imagePosition [1]= loadedFile.readline()
-		frames = loadedFile.readline()
-		animationCycle = loadedFile.readline()
-		spaceScan = loadedFile.readline()
-		anchors = loadedFile.readline()
-		size[0] = loadedFile.readline()
-		size[1] = loadedFile.readline()
-		names_all = loadedFile.readline()
-		rarity = loadedFile.readline()
-	except:
+		description = loadedDataFile[2]
+		shortDescription = loadedDataFile[3]
+		race = loadedDataFile[4]
+		dropItem = loadedDataFile[5]
+		category = loadedDataFile[6]
+		imagePath = "pre loaded"
+		imageIconPath = "pre loaded"
+		imagePosition[0] = float(loadedDataFile[7])
+		imagePosition [1]= float(loadedDataFile[8])
+		frames = int(loadedDataFile[9])
+		animationCycle = float(loadedDataFile[10])
+		spaceScan = float(loadedDataFile[11])
+		anchors = loadedDataFile[12]
+		size[0] = int(loadedDataFile[13])
+		size[1] = int(loadedDataFile[14])
+		names_all = loadedDataFile[15]
+		rarity = loadedDataFile[1]
+		imageData = loadedFiles[1]
+		imageIconData = loadedFiles[2]
+	else:
 		print "Could not load files"
 	preMade = ""
 else:
@@ -103,8 +116,8 @@ else:
 	size[1] = setValue("Height", "Interger", 8)
 	names_all = setValue("Frame names", "String", "default")
 	rarity = setValue("Rarity", "String", "common")
-	imagePath = setValue("Tile sheet", "Image", " ")
-	imageIconPath =setValue("Inventory Icon", "Image", " ")
+	imagePath = setValue("Tile sheet", "Link", " ")
+	imageIconPath =setValue("Inventory Icon", "Link", " ")
 
 dimentions = [frames,1]
 itemName = objectName
@@ -191,32 +204,81 @@ saveFile = open(dotObjitemLocation, "w+")
 saveFile.write(dotObjitem)
 saveFile.close
 print "Saving Images"
-if imagePath != "":
+if imagePath != "pre loaded":
 	with open(imagePath, "r") as oip:
 		imageData = oip.read()
-		with open(curDir + "/" + objectNamr + "/" + objectName + ".png", "w") as nip:
-			nip.write(imageData)
-			oip.close()
-			nip.close()
+with open(curDir + "/" + objectName + "/" + objectName + ".png", "w") as nip:
+	nip.write(imageData)
+	if imagePath != "pre loaded":
+		oip.close()
+	nip.close()
 
-if imageIconPath != "":
+if imageIconPath != "pre loaded":
 	with open(imageIconPath, "r") as oiip:
-		imageData = oiip.read()
-		with open(AsItOb + "/" + objectName + ".png", "w") as niip:
-			niip.write(imageData)
-			oiip.close()
-			niip.close()
+		imageIconData = oiip.read()
+with open(AsItOb + "/" + objectName + ".png", "w") as niip:
+	niip.write(imageIconData)
+	if imageIconPath != "pre loaded":
+		oiip.close()
+	niip.close()
 
 print "Complete"
+preMadeBasicFolder = curDir + "/premadebasic"
+preMadeFileBasic = "v1.0\n" + objectName + "\n" + description + "\n" + shortDescription + "\n" + race + "\n" + dropItem + "\n" + category + "\n" + imagePath + "\n" + imageIconPath + "\n" + str(imagePosition[0]) + "\n" + str(imagePosition[1]) + "\n" + str(frames) + "\n" + str(animationCycle) + "\n" + str(spaceScan) + "\n" + anchors + "\n" + str(size[0]) + "\n" + str(size[1]) + "\n" + names_all + "\n" + rarity
 if raw_input("create Pre-made object file? (Y/N)> ") == "Y":
-	preMadeFile = objectName + "\n" + description + "\n" + shortDescription + "\n" + race + "\n" + dropItem + "\n" + category + "\n" + imagePath + "\n" + imageIconPath + "\n" + str(imagePosition[0]) + "\n" + str(imagePosition[1]) + "\n" + str(frames) + "\n" + str(animationCycle) + "\n" + str(spaceScan) + "\n" + anchors + "\n" + str(size[0]) + "\n" + str(size[1]) + "\n" + names_all + "\n" + rarity
-	print "Checking for Pre-made objects folder (pre-release)"
-	preMadeFolder = curDir + "/premade"
-	if not os.path.exists(preMadeFolder):
+	if not os.path.exists(preMadeBasicFolder + "/" + objectName):
+		print "Checking for Pre-made Basic folder (pre-release)"
+	if not os.path.exists(preMadeBasicFolder):
 		print "Folder not found\nCreating folder"
-		os.mkdir(preMadeFolder)
+		os.mkdir(preMadeBasicFolder)
 	else:
 		print "Folder found"
-	saveFile = open(preMadeFolder + "/" + objectName + ".aof", "w+")
-	saveFile.write(preMadeFile)
+	os.mkdir(preMadeBasicFolder + "/" + objectName)
+	saveFile = open(preMadeBasicFolder + "/" + objectName + "/" + objectName + ".pmb", "w")
+	saveFile.write(preMadeFileBasic)
 	saveFile.close
+	if imagePath != "pre loaded":
+		with open(imagePath, "r") as oip:
+			imageData = oip.read()
+			with open(preMadeBasicFolder + "/" + objectName + "/" + objectName + ".png", "w") as nip:
+				nip.write(imageData)
+				oip.close()
+				nip.close()
+	else:
+		with open(preMadeBasicFolder + "/" + objectName + "/" + objectName + ".png", "w") as nip:
+				nip.write(imageData)
+				nip.close()
+
+	if imageIconPath != "pre loaded":
+		with open(imageIconPath, "r") as oiip:
+			imageData = oiip.read()
+			with open(preMadeBasicFolder + "/" + objectName + "/" + objectName + "icon.png", "w") as niip:
+				niip.write(imageData)
+				oiip.close()
+				niip.close()
+	else:
+		with open(preMadeBasicFolder + "/" + objectName + "/" + objectName + "icon.png", "w") as niip:
+				niip.write(imageData)
+				niip.close()
+
+preMadeFolder = curDir + "/premade"
+if not os.path.exists(preMadeFolder + "/" + objectName + ".pmf"):
+	if raw_input("create .pof? (experimental) Y/N> ") == "Y":
+		print "Checking for Pre-made objects folder"
+		if not os.path.exists(preMadeFolder):
+			print "Folder not found\nCreating folder"
+			os.mkdir(preMadeFolder)
+		else:
+			print "Folder found"
+		with open(imagePath, "r") as oip:
+			imageData = oip.read()
+			oip.close()
+		with open(imageIconPath, "r") as oiip:
+			imageIconData = oiip.read()
+			oiip.close()
+		preMadeFile = "v1.0\n" + objectName + "\n" + description + "\n" + shortDescription + "\n" + race + "\n" + dropItem + "\n" + category + "\n" + str(imagePosition[0]) + "\n" + str(imagePosition[1]) + "\n" + str(frames) + "\n" + str(animationCycle) + "\n" + str(spaceScan) + "\n" + anchors + "\n" + str(size[0]) + "\n" + str(size[1]) + "\n" + names_all + "\n" + rarity
+		preMadeFileData = str(preMadeFileBasic) + "split" + str(imageData) + "split" + str(imageIconData)
+	
+		with open(preMadeFolder + "/" + objectName + ".pmf", "w") as pmfd:
+			pmfd.write(preMadeFileData)
+			pmfd.close()
